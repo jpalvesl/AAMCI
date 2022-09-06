@@ -1,3 +1,4 @@
-# Aplicações Avançadas com Microcontoladores e Interfaceamento
+# Aplicações Avançadas com Microcontoladores e Interfaceamento (2022.2)
 
-> Dupla: João Pedro e Ayrton Medeiros
+
+> Dupla: João Pedro e Myrlla Lucas
