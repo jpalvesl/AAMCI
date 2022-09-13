@@ -1,0 +1,6 @@
+21:06:06 **** Incremental Build of configuration Debug for project projetos ****
+make -j8 all 
+make: Nada a ser feito para 'all'.
+
+21:06:07 Build Finished (took 560ms)
+
