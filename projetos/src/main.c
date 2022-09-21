@@ -19,12 +19,13 @@ void atraso() {
 int main(void)
 {
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
-	GPIOA->MODER |= (0B01 << 12);
+	GPIOA->MODER |= (0b0101 << 12);
+	//GPIOA->MODER |= (0b01 << 14);
 
 	while(1) {
-		GPIOA->ODR |= 1 << 6;
+		GPIOA->ODR |= 0b11 << 6;
 		atraso();
-		GPIOA->ODR &= ~(1 << 6);
+		GPIOA->ODR &= ~(0b11 << 6);
 		atraso();
 	}
 
