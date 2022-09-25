@@ -2,113 +2,45 @@
 
 void atraso(int valor){
 	while(valor > 0) {
-		// vai verificar se o pe3 foi pressionado para sair
-		uint16_t k1_pressed = !(GPIOE->IDR & (1<<3));
-		GPIOA->ODR |= 1<<6;
+		if (!(GPIOE->IDR & (1 << 3))) break;
 
-
-		if (k1_pressed) break;
-
-
-		// vai contar
 		--valor;
 	}
-
-	//while(!(!(GPIOE->IDR & (1 << 3)) && !(GPIOE->IDR & (1 << 4)))) || !(GPIOE->IDR & (1 << 4)));
-
 }
-
-//void atraso(int valor){
-//
-//
-//	while(1) {
-//		int c = 0;
-//		// vai verificar se o pe3 foi pressionado para sair
-//		uint16_t k1_pressed = !(GPIOE->IDR & (1<<3));
-//		GPIOA->ODR |= 1<<6;
-//
-//
-//		if (!(GPIOE->IDR & (1<<3)) && (c <=valor)){
-//			GPIOA->ODR &= ~(1<<7);
-//			break;
-//		}
-//
-//
-//		// vai contar
-//		c=c+1;
-//
-//	}
-//
-//
-//
-//}
-
 
 
 int main(void)
 {
-	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
-	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN;
-	GPIOA->MODER |= (0b01 << 12);
-	GPIOA->MODER |= (0b01 << 14);
-	GPIOE->MODER &= ~(0b11 << 6); //CONFIGURA PE3 COMO ENTRADA
-	GPIOE->MODER &= ~(0b11 << 8); //CONFIGURA PE4 COMO ENTRADA
-	GPIOE->PUPDR |= 0b01 << 8 ; //HABILITAR O PULLUP EM PE4
-	GPIOE->PUPDR |= 0b01 << 6 ; //HABILITAR O PULLUP EM PE3
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; // Habilita o clock no barramento da GPIOA
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN; // Habilita o clock no barramento da GPIOE
+	GPIOA->MODER |= (0b01 << 12);        // Configura PA6 como saída (Led D2)
+	GPIOA->MODER |= (0b01 << 14);        // Configura PA7 como saída (Led D3)
+	GPIOE->MODER &= ~(0b11 << 6);        // Configura PE3 como entrada
+	GPIOE->MODER &= ~(0b11 << 8);        // Configura PE4 como entrada
+	GPIOE->PUPDR |= 0b01 << 8 ;          // Habilita o resistor de pull-up em PE4 (Botão K0)
+	GPIOE->PUPDR |= 0b01 << 6 ;          // Habilita o resistor de pull-up em PE3 (Botão K1)
 
 
 	GPIOA->ODR |= 1<<6;
 	GPIOA->ODR |= 1<<7;
 
 	while(1){
+		while(!(GPIOE->IDR & (1<<3))); // caso K1 for apertado primeiro trava o programa
 
-		uint16_t leitura = GPIOE->IDR;
-
-		if(!(leitura & (1<<4))) //testa se o pe3 está em nível alto
+		if(!(GPIOE->IDR & (1<<4))) // Verifica se K0 foi pressionado
 		{
 			atraso(4000000);
-			if(!(leitura & (1<<3))){
-					GPIOA->ODR &= ~(1<<6);
+			if(!(GPIOE->IDR & (1<<4)) && !(GPIOE->IDR & (1<<3))) { // verifica se ambos os botoes estao sendo pressionados
+					GPIOA->ODR &= ~(1<<6); // liga o led
+					while (!(GPIOE->IDR & (1<<4)) && !(GPIOE->IDR & (1<<3))); // trava o programa com o led ligado
+			}
+
+
+			else { // caso o K0 se mantenha pressionado apos a verificacao de 1 segundo deve travar o programa
+				while(!(GPIOE->IDR & (1<<4)));
 			}
 		}
-		else{
-			GPIOA->ODR |= (1<<6);
-		}
 
-		if(!(leitura & (1<<3)))
-		{
-			while(!(GPIOE->IDR & (1<<3)));
-		}
-
-
-//		GPIOA->ODR |= 1<<6;
-//		atraso(4000000);
-//		GPIOA->ODR &= ~(1<<6);
-//		atraso(4000000);
+		GPIOA->ODR |= (1<<6); // deve desligar o led no fim do loop
 	}
-
 }
-
-
-//uint16_t leitura = GPIOE->IDR;
-//
-//		if(!(leitura & (1<<3)) && !(leitura & (1<<4))) //testa se o pe3 está em nível alto
-//		{
-//			GPIOA->ODR &= ~(1<<6);
-////			GPIOA->ODR |= 1<<7;
-//		}
-//
-//		else {
-//			GPIOA->ODR |= 1<<6;			;
-//		}
-//
-//
-////		if(!(leitura & (1<<4))) //testa se o pe4 está em nível alto
-////		{
-////			GPIOA->ODR &= ~(1 << 6);
-////			GPIOA->ODR &= ~(1 << 7);
-////		}
-//
-//
-////		GPIOA->ODR |= 1<<6;
-////		GPIOA->ODR |= 1<<7;
