@@ -1,21 +1,9 @@
 #include "stm32f4xx.h"
 #include "Utility.h"
 
-#define QTD_BITS 3
-
-#define LIGA_LED1 0b001
-#define LIGA_LED2 0b010
-#define VERIFICA_COMUNICACAO 0b000
-#define CONFIRMA_COMUNICACAO 0b100
-
-
-
-//Protótipos de funções
 void envia_cmd(uint8_t);	//função para enviar um comando no barramento
 uint8_t recebe_cmd(void);	//função para receber um comando
 void buzzer(void);			//função de ativação do buzzer
-uint8_t verificaComunicacao(void);
-uint8_t confirmaComunicacao(void);
 
 int main(void)
 {
@@ -33,64 +21,41 @@ int main(void)
 	Delay_ms(100);	//aguarda sinais estabilizarem
 	while(1)
 	{
-
-
 		if(!(GPIOE->IDR & (1 << 4)))			//verifica se PE4 foi pressionado
 		{
-			// verificar se o outro micro esta ligado tambem
-			uint8_t existeComunicacao = verificaComunicacao() == VERIFICA_COMUNICACAO;
-
-			// caso sim
-			// se comunicar com a outra placa
-			if (existeComunicacao) {
-				envia_cmd(0b100);
-				Delay_ms(75);     //filtro de bouncing
+			envia_cmd(0b01);
+			Delay_us(25);
+			if((GPIOA->IDR & 1)) {
+				GPIOA->ODR ^= 1 << 6;
 			}
 
-			// caso nao
-			// ligar o led da propria placa
-			else {
-				GPIOA->ODR ^= (1 << 6);
-			}
 			buzzer();							//sinaliza o fim do envio
-
+			Delay_ms(75);					//filtro de bouncing
 			while(!(GPIOE->IDR & (1 << 4)));	//aguarda o botão ser solto
 		}
 
 		if(!(GPIOE->IDR & (1 << 3)))			//verifica se PE3 foi pressionado
 		{
-			// verificar se o outro micro esta ligado tambem
-			uint8_t existeComunicacao = verificaComunicacao() == VERIFICA_COMUNICACAO;
-
-			if (existeComunicacao) {
-				envia_cmd(0b010);
-				Delay_ms(75);     //filtro de bouncing
+			envia_cmd(0b10);
+			Delay_us(25);
+			if((GPIOA->IDR & 1)) {
+				GPIOA->ODR ^= 1 << 7;
 			}
-
-			else {
-				GPIOA->ODR ^= (1 << 7);
-			}
-			buzzer();					//sinaliza o fim do envio
-
-
+			buzzer();							//sinaliza o fim do envio
+			Delay_ms(75);					//filtro de bouncing
 			while(!(GPIOE->IDR & (1 << 3)));	//aguarda o botão ser solto
 		}
 
 		if(!(GPIOA->IDR & 1))	//verifica se há comunicação
 		{
-//			uint8_t comunicacaoVerificada = confirmaComunicacao == CONFIRMA_COMUNICACAO;
-			uint8_t comunicacaoVerificada = 1;
-
-			if (comunicacaoVerificada) {
-				uint8_t recebido = recebe_cmd();	//recebe o comando
-				if(recebido == 0b001)
-				{
-					GPIOA->ODR ^= 1 << 6;			//alterna o estado do LED em PA6
-				}
-				if(recebido == 0b010)
-				{
-					GPIOA->ODR ^= 1 << 7;			//alterna o estado do LED em PA7
-				}
+			uint8_t recebido = recebe_cmd();	//recebe o comando
+			if(recebido == 0b01)
+			{
+				GPIOA->ODR ^= 1 << 6;			//alterna o estado do LED em PA6
+			}
+			if(recebido == 0b10)
+			{
+				GPIOA->ODR ^= 1 << 7;			//alterna o estado do LED em PA7
 			}
 		}
 	}
@@ -101,7 +66,7 @@ void envia_cmd(uint8_t dado)
 {
 	GPIOA->ODR &= ~1;	//start bit
 	Delay_us(50);		//aguarda tempo do start bit
-	for(uint8_t counter=0; counter<QTD_BITS; ++counter) //envia os bits do comando
+	for(uint8_t counter=0; counter<2; ++counter) //envia os bits do comando
 	{
 		if(dado & 1)			//envia o próximo bit
 			GPIOA->ODR |= 1;
@@ -122,7 +87,7 @@ uint8_t recebe_cmd(void)
 	Delay_us(25);			//aguarda metade do start bit
 	if(!(GPIOA->IDR & 1))	//confirma que houve um start bit
 	{
-		for(uint8_t counter=0; counter<QTD_BITS; ++counter)	//leitura dos bits
+		for(uint8_t counter=0; counter<2; ++counter)	//leitura dos bits
 		{
 			Delay_us(50);				//aguarda o tempo do bit
 			if(GPIOA->IDR & 1)
@@ -135,10 +100,13 @@ uint8_t recebe_cmd(void)
 		Delay_us(50);			//aguarda para fazer leitura do stop bit
 		if((GPIOA->IDR & 1))	//confirma que houve um stop bit
 		{
-			dado_recebido >>= 1; // removendo o bit de stop
+			dado_recebido >>= 1;
 			Delay_us(25);		//aguarda o fim do tempo do stop bit
-//			return dado_retornado = ((dado_recebido & 0b10) >> 1) | ((dado_recebido & 0b01) << 1); //retorna o dado recebido
-			return dado_retornado = dado_recebido & (0b111);
+
+			GPIOA->ODR &= ~1;
+			Delay_us(50);
+			GPIOA->ODR |= 1;
+			return dado_retornado = ((dado_recebido & 0b10) >> 1) | ((dado_recebido & 0b01) << 1); //retorna o dado recebido
 		}
 		else
 			return 0;	//não houve recepção do stop bit, aborta recepção
@@ -157,12 +125,4 @@ void buzzer(void)
 	GPIOA->ODR |= 1 << 1;			//liga o buzzer
 	Delay_ms(10);					//aguarda
 	GPIOA->ODR &= ~(1 << 1);		//desliga o buzzer
-}
-
-uint8_t verificaComunicacao() {
-	return 0b000;
-}
-
-uint8_t confirmaComunicacao() {
-	return 0b100;
 }
