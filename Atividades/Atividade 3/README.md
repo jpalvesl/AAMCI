@@ -1,4 +1,4 @@
-# Atividade 2
+# Atividade 3
 
 > Consiste em configurar os pinos que estão ligados nos leds (D2 e D3) presentes na placa como saída, e também configurar os pinos dos botões (K0 e K1) como entrada e para evitar flutuação quando a chave estiver aberta adicionar o resistor de pull-up. Ao apertar K0 ambos os leds se mantém ligados e ao apertar K1 ambos os leds são desligados.
 
@@ -45,3 +45,5 @@ int main(void)
 	}
 }
 ```
+
+Proxima atividade [Link](../Atividade%204/)
