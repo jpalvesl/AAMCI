@@ -129,10 +129,10 @@ int __io_getchar(void)
 }
 
 //ISR da USART1. Todas as ISR's estão definidas no arquivo startup_stm32.s
-void USART1_IRQHandler(void)
-{
-	__io_putchar(__io_getchar());	//lê o dado e reenvia pela USART1
-}
+//void USART1_IRQHandler(void)
+//{
+//	__io_putchar(__io_getchar());	//lê o dado e reenvia pela USART1
+//}
 
 
 

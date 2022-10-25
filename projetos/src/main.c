@@ -1,9 +1,9 @@
 #include "stm32f4xx.h"
 #include "Utility.h"
 
-#define TOGGLE_LED1 1
-#define TOGGLE_LED2 2
-#define ACK 3
+#define TOGGLE_LED1 'A'
+#define TOGGLE_LED2 'B'
+#define ACK 'C'
 
 int teveComunicacao = 1;
 
