@@ -10,3 +10,5 @@
 3. [Fazer um botão ligar dois leds e ao apertar outro botão desligar eles](./Atividades/Atividade%203/)
 4. [Fazer led ligar apenas ao pressionar os botões em uma certa ordem e caso o primeiro botão esteja pressionado por mais de 1s mesmo clicando no segundo o led não liga](./Atividades/Atividade%204/)
 5. [Comunicação entre microcontroladores](./Atividades/Atividade%205%20-%20Ponto/)
+6. [Comunicação entre microcontroladores usando USART](./Atividades/Atividade%206/)
+7. [Refazendo atividade 5 usando USART](./Atividades/Atividade%207%20-%20Ponto/)
