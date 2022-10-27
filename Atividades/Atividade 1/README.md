@@ -32,6 +32,6 @@ int main(void)
 ```
 
 <div style="display: flex; justify-content:space-between;">
-	<a href="../Atividade 2">Atividade anterior</a>
+	<a href=""></a>
 	<a href="../Atividade 2">Próxima atividade</a>
 </div>
