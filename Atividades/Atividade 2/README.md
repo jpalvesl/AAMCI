@@ -49,7 +49,7 @@ int main(void)
 }
 ```
 
-<div style="display: flex; justify-content:space-between;">
-	<a href="../Atividade 1">Atividade 1</a>
-	<a href="../Atividade 3">Próxima atividade</a>
+<div style="display:flex;">
+	<a style="display:inline-block; margin-right:auto;" href="../Atividade 1">Atividade anterior</a>
+	<a style="display:inline-block;" href="../Atividade 3">Próxima atividade</a>
 </div>
