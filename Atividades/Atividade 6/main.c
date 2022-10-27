@@ -14,7 +14,7 @@ int main(void)
     USART1_Init();
 
 	while(1) {
-    printf("Teste\n")
-    Delay_ms(1000);
+        printf("Teste\n");
+        Delay_ms(1000);
 	}
 }

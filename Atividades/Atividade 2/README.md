@@ -49,4 +49,7 @@ int main(void)
 }
 ```
 
-Proxima atividade [Link](../Atividade%203/)
+<div style="display: flex; justify-content:space-between;">
+	<a href=""></a>
+	<a href="../Atividade 3">Próxima atividade</a>
+</div>

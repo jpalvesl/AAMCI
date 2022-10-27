@@ -31,4 +31,7 @@ int main(void)
 }
 ```
 
-Proxima atividade [Link](../Atividade%202/)
+<div style="display: flex; justify-content:space-between;">
+	<a href="../Atividade 2">Atividade anterior</a>
+	<a href="../Atividade 2">Próxima atividade</a>
+</div>
