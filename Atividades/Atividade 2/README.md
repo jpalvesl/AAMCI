@@ -49,7 +49,4 @@ int main(void)
 }
 ```
 
-<div style="display:flex;">
-	<a style="display:inline-block; margin-right:auto;" href="../Atividade 1">Atividade anterior</a>
-	<a style="display:inline-block;" href="../Atividade 3">Próxima atividade</a>
-</div>
+[Próxima atividade](../Atividade%203/)

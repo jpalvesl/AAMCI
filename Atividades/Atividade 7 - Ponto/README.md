@@ -99,5 +99,3 @@ void buzzer(void)
 	GPIOA->ODR &= ~(1 << 1);		//desliga o buzzer
 }
 ```
-
-Proxima atividade [Link](.)
