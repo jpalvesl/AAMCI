@@ -1,4 +1,4 @@
-# Atividade 6 - Ponto
+# Atividade 7 - Ponto
 
 > Nessa atividade tivemos que implementar a comunicação feita na atividade 5 porém usando apenas a comunicação atraves da USART e isso foi feito da seguinte forma, caso o pacote recebido seja igual a algum dos valores definidos para dar toggle nos leds um pacote de ACK é enviado de volta ao microcontrolador e ao receber esse pacote uma flag criada por nós `teveComunicacao` é setada, permitindo que o microcontrolador possa definir se deve ligar o próprio led com base nessa flag.
 
