@@ -45,6 +45,24 @@ char meses[13][20] = {
 };
 
 
+#define DU RTC->DR & (RTC_DR_DU)
+#define DT (RTC->DR & (RTC_DR_DT)) >> 4
+#define MU (RTC->DR & (RTC_DR_MU)) >> 8
+#define MT (RTC->DR & (RTC_DR_MT)) >> 12
+#define WDU ((RTC->DR & (RTC_DR_WDU)) >> 13)
+#define YU (RTC->DR & (RTC_DR_YU)) >> 16
+#define YT (RTC->DR & (RTC_DR_YT)) >> 20
+
+#define SU RTC->TR & (RTC_TR_SU)
+#define ST (RTC->TR & (RTC_TR_ST)) >> 4
+#define MNU (RTC-> TR & (RTC_TR_MNU)) >> 8
+#define MNT (RTC-> TR & (RTC_TR_MNT)) >> 12
+#define HU (RTC-> TR & (RTC_TR_HU)) >> 16
+#define HT (RTC-> TR & (RTC_TR_HT)) >> 20
+
+
+#define MES (10 * ((RTC->DR & (RTC_DR_MT)) >> 12) + ((RTC->DR & (RTC_DR_MU)) >> 8))
+
 int main(void)
 {
     Configure_Clock(); // configurando o clock para poder usar o delay
@@ -56,43 +74,23 @@ int main(void)
 
     RTC_Calendar.formato = 0;
     RTC_Calendar.dia = 6;
-    RTC_Calendar.data = 3;
+    RTC_Calendar.data = 31;
     RTC_Calendar.mes = 12;
     RTC_Calendar.ano = 22;
-    RTC_Calendar.horas= 16;
-    RTC_Calendar.minutos = 0;
-    RTC_Calendar.segundos = 0;
+    RTC_Calendar.horas= 23;
+    RTC_Calendar.minutos = 59;
+    RTC_Calendar.segundos = 55;
 
     RTC_SetCalendar(&RTC_Calendar);
-
 
     int registador_segundos_anteior = RTC->TR;
 	while(1) {
 		while (registador_segundos_anteior == RTC->TR);
 		registador_segundos_anteior = RTC->TR;
 
-		// registrador 1
-		uint8_t du = RTC->DR & (RTC_DR_DU);
-		uint8_t dt = (RTC->DR & (RTC_DR_DT)) >> 4;
-		uint8_t mu = (RTC->DR & (RTC_DR_MU)) >> 8;
-		uint8_t mt = (RTC->DR & (RTC_DR_MT)) >> 12;
-		uint8_t wdu = (RTC->DR & (RTC_DR_WDU)) >> 13;
-		uint8_t yu = (RTC->DR & (RTC_DR_YU)) >> 16;
-		uint8_t yt = (RTC->DR & (RTC_DR_YT)) >> 20;
 
-
-		uint8_t mes = 10*mt + mu;
-
-		// registrador 2
-		uint8_t su = RTC->TR & (RTC_TR_SU);
-		uint8_t st = (RTC->TR & (RTC_TR_ST)) >> 4;
-		uint8_t mnu = (RTC-> TR & (RTC_TR_MNU)) >> 8;
-		uint8_t mnt = (RTC-> TR & (RTC_TR_MNT)) >> 12;
-		uint8_t hu = (RTC-> TR & (RTC_TR_HU)) >> 16;
-		uint8_t ht = (RTC-> TR & (RTC_TR_HT)) >> 20;
-
-		printf("Hoje é %s, %d%d de %s de 20%d%d.\n",dias[wdu], dt, du, meses[mes], yt, yu);
-		printf("A hora atual é %d%d:%d%d:%d%d.\n\n", ht, hu, mnt, mnu, st, su);
+		printf("Hoje é %s, %d%d de %s de 20%d%d.\n",dias[WDU], DT, DU, meses[MES], YT, YU);
+		printf("A hora atual é %d%d:%d%d:%d%d.\n\n", HT, HU, MNT, MNU, ST, SU);
 	}
 }
 
